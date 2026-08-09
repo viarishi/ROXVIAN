@@ -20,8 +20,13 @@ jobs:
           mkdir project
           unzip -q ROXVIACR.zip -d project
 
-          echo "Project files:"
-          find project -maxdepth 2 -type f
+      - name: Fix KSP compatibility
+        working-directory: project
+        run: |
+          sed -i 's/googleDevtoolsKsp = "2.3.5"/googleDevtoolsKsp = "2.2.10-2.0.2"/' gradle/libs.versions.toml
+
+          echo "KSP version:"
+          grep googleDevtoolsKsp gradle/libs.versions.toml
 
       - name: Setup Java
         uses: actions/setup-java@v4
