@@ -27,10 +27,29 @@ jobs:
 
           echo "KSP version:"
           grep googleDevtoolsKsp gradle/libs.versions.toml
+
       - name: Allow Kotlin source sets
         working-directory: project
         run: |
           echo "android.disallowKotlinSourceSets=false" >> gradle.properties
+
+      - name: Create Android debug keystore
+        working-directory: project
+        run: |
+          rm -f debug.keystore
+          keytool -genkeypair \
+            -v \
+            -keystore debug.keystore \
+            -storepass android \
+            -alias androiddebugkey \
+            -keypass android \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -dname "CN=Android Debug,O=Android,C=US"
+
+          ls -lh debug.keystore
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
